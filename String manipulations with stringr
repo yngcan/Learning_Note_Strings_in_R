@@ -1,0 +1,144 @@
+### Chapter 4
+## String manipulations with stringr
+## 4.1 Package stringr
+# load 'stringr'
+library(stringr)
+
+## 4.2 Basic String Operations
+
+##　4.2.1 Concatenating with str c()
+
+# default usage
+str_c("May", "The", "Force", "Be", "With", "You")
+
+# removing zero length objects
+str_c("May", "The", "Force", NULL, "Be", "With", "You", character(0))
+
+# changing separator
+str_c("May", "The", "Force", "Be", "With", "You", sep = "_")
+
+# synonym function 'str_join'
+str_join("May", "The", "Force", "Be", "With", "You", sep = "-")
+
+## 4.2.2 Number of characters with str length()
+# some text (NA included)
+some_text = c("one", "two", "three", NA, "five")
+# compare 'str_length' with 'nchar'
+nchar(some_text)
+str_length(some_text)
+
+some_factor = factor(c(1, 1, 1, 2, 2, 2), labels = c("good", "bad"))
+some_factor
+
+nchar(some_factor)
+# now compare it with 'str_length'
+str_length(some_factor)
+
+## 4.2.3 Substring with str sub()
+
+# some text
+lorem = "Lorem Ipsum"
+# apply 'str_sub'
+str_sub(lorem, start = 1, end = 5)
+# equivalent to 'substring'
+substring(lorem, first = 1, last = 5)
+
+# another example
+str_sub("adios", 1:3)
+
+# some strings
+resto = c("brasserie", "bistrot", "creperie", "bouchon")
+# 'str_sub' with negative positions
+str_sub(resto, start = -4, end = -1)
+# An interesting feature of str sub() is its ability to 
+# work with negative indices in the start and end positions.
+
+# extracting sequentially
+str_sub(lorem, seq_len(nchar(lorem)))
+
+# reverse substrings with negative positions
+str_sub(lorem, -seq_len(nchar(lorem)))
+
+substring(lorem, seq_len(nchar(lorem)))
+substring(lorem, -seq_len(nchar(lorem)))
+
+# replacing 'Lorem' with 'Nullam'
+lorem = "Lorem Ipsum"
+str_sub(lorem, 1, 5) <- "Nullam"
+
+# replacing with negative positions
+lorem = "Lorem Ipsum"
+str_sub(lorem, -1) <- "Nullam"
+
+# multiple replacements
+lorem = "Lorem Ipsum"
+str_sub(lorem, c(1, 7), c(5, 8)) <- c("Nullam", "Enim")
+
+## 4.2.4 Duplication with str dup()
+# default usage
+str_dup("hola", 3)
+
+# use with differetn 'times'
+str_dup("adios", 1:3)
+
+# use with a string vector
+words = c("lorem", "ipsum", "dolor", "sit", "amet")
+str_dup(words, 2)
+str_dup(words, 1:5)
+
+## 4.2.5 Padding with str pad()
+
+# default usage
+str_pad("hola", width = 7)
+
+# pad both sides
+str_pad("adios", width = 7, side = "both")
+
+# left padding with '#'
+
+str_pad("hashtag", width = 8, pad = "#")
+
+# pad both sides with '-'
+  str_pad("hashtag", width = 9, side = "both", pad = "-")
+
+## 4.2.6 Wrapping with str wrap()
+# quote (by Douglas Adams)
+  some_quote = c(
+    "I may not have gone",
+    "where I intended to go,",
+    "but I think I have ended up",
+    "where I needed to be")
+  # some_quote in a single paragraph
+  some_quote = paste(some_quote, collapse = " ")
+  
+  # display paragraph with width=30
+  cat(str_wrap(some_quote, width = 30)) 
+  
+  # display paragraph with first line indentation of 2
+  cat(str_wrap(some_quote, width = 30, indent = 2), "nn")
+
+  # display paragraph with following lines indentation of 3
+  cat(str_wrap(some_quote, width = 30, exdent = 3), "nn")
+
+## 4.2.7 Trimming with str trim()
+  # text with whitespaces
+  bad_text = c("This", " example ", "has several ", " whitespaces ")
+  # remove whitespaces on the left side
+  str_trim(bad_text, side = "left")
+  # remove whitespaces on the right side
+  str_trim(bad_text, side = "right")
+  # remove whitespaces on both sides
+  str_trim(bad_text, side = "both")
+  
+## 4.2.8 Word extraction with word()
+  # some sentence
+  change = c("Be the change", "you want to be")
+  # extract first word
+  word(change, 1)
+  # extract second word
+  word(change, 2)
+  # extract last word
+  word(change, -1)
+  # extract all but the first words
+  word(change, 2, -1)
+  
