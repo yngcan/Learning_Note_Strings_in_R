@@ -1,0 +1,415 @@
+### Chapter 5
+## Regular Expressions (part I)
+## 5.2 Regular Expressions in R
+## 5.2.1 Regex syntax details in R
+## 5.2.2 Metacharacters
+# string
+money = "$money"
+# the naive but wrong way
+sub(pattern = "$", replacement = "", x = money)
+# the right way in R
+sub(pattern = "\\$", replacement = "", x = money)
+
+# dollar
+sub("\\$", "", "$Peace-Love")
+# dot
+sub("\\.", "", "Peace.Love")
+# plus
+sub("\\+", "", "Peace+Love")
+# caret
+sub("\\^", "", "Peace^Love")
+# vertical bar
+sub("\\|", "", "Peace|Love")
+# opening round bracket
+sub("\\(", "", "Peace(Love)")
+# closing round bracket
+sub("\\)", "", "Peace(Love)")
+# opening square bracket
+sub("\\[", "", "Peace[Love]")
+# closing square bracket
+sub("\\]", "", "Peace[Love]")
+# opening curly bracket
+sub("\\{", "", "Peace{Love}")
+# closing curly bracket
+sub("\\}", "", "Peace{Love}")
+# double backslash
+sub("\\\\", "", "Peace\\Love")
+# double backslash
+sub("\\\\", "", "Peace\\Love")
+
+## 5.2.3 Sequences
+## Digits and non-digits
+# replace digit with '-'
+sub("\\d", "_", "the dandelion war 2010")
+gsub("\\d", "_", "the dandelion war 2010")
+
+## replace non-digit with '_'
+sub("\\D", "_", "the dandelion war 2010")
+gsub("\\D", "_", "the dandelion war 2010")
+
+## Spaces and non-spaces
+# replace space with '-'
+sub("\\s", "_", "the dandelion war 2010")
+gsub("\\s", "_", "the dandelion war 2010")
+
+# replace non-space with '_'
+sub("\\S", "_", "the dandelion war 2010")
+gsub("\\S", "_", "the dandelion war 2010")
+
+# Words and non-words
+# replace word with '_'
+sub("\\w", "_", "the dandelion war 2010")
+gsub("\\w", "_", "the dandelion war 2010")
+# replace non-word with '_'
+sub("\\W", "_", "the dandelion war 2010")
+gsub("\\W", "_", "the dandelion war 2010")
+
+## Word boundaries and non-word-boundaries
+# replace word boundary with '_'
+sub("\\b", "_", "the dandelion war 2010")
+gsub("\\b", "_", "the dandelion war 2010")
+# replace non-word boundary with '_'
+sub("\\B", "_", "the dandelion war 2010")
+gsub("\\B", "_", "the dandelion war 2010")
+
+## 5.2.4 Character Classes
+# A character class or character set is a list of 
+# characters enclosed by square brackets [ ].
+
+# some string
+transport = c("car", "bike", "plane", "boat")
+# look for 'e' or 'i'
+grep(pattern = "[ei]", transport, value = TRUE)
+
+# some numeric strings
+numerics = c("123", "17-April", "I-II-III", "R 3.0.1")
+
+# match strings with 0 or 1
+grep(pattern = "[01]", numerics, value = TRUE)
+
+# match any digit
+grep(pattern = "[0-9]", numerics, value = TRUE)
+
+# negated digit
+grep(pattern = "[^0-9]", numerics, value = TRUE)
+
+## 5.2.5 POSIX Character Classes
+# la vie (string)
+la_vie = "La vie en #FFC0CB (rose);\nCes't la vie! \ttres jolie"
+
+# if you print 'la_vie'
+print(la_vie)
+
+# if you cat 'la_vie'
+cat(la_vie)
+
+# remove space characters
+gsub(pattern = "[[:blank:]]", replacement = "", la_vie)
+
+# remove digits
+gsub(pattern = "[[:punct:]]", replacement = "", la_vie)
+
+# remove digits
+gsub(pattern = "[[:xdigit:]]", replacement = "", la_vie)
+
+# remove printable characters
+gsub(pattern = "[[:print:]]", replacement = "", la_vie)
+
+# remove non-printable characters
+gsub(pattern = "[^[:print:]]", replacement = "", la_vie)
+
+# remove graphical characters
+gsub(pattern = "[[:graph:]]", replacement = "", la_vie)
+
+# remove non-graphical characters
+gsub(pattern = "[^[:graph:]]", replacement = "", la_vie)
+
+## 5.2.6 Quantifiers
+# people names
+people = c("rori", "emilia", "matteo", "mehmet", "filipe", "anna", "tyler",
+           "rasmus", "jacob", "youna", "flora", "adi")
+
+# match 'm' at most once
+grep(pattern = "m?", people, value = TRUE)
+
+# match 'm' exactly once
+grep(pattern = "m{1}", people, value = TRUE, perl = FALSE)
+
+
+# match 'm' zero or more times, and 't'
+grep(pattern = "m*t", people, value = TRUE)
+
+# match 't' zero or more times, and  'm'
+grep(pattern = "t*m", people, value = TRUE)
+
+# match 'm' one or more times
+grep(pattern = "m+", people, value = TRUE)
+
+# match 'm' one or more times, and 't'
+grep(pattern = "m+.t", people, value = TRUE)
+
+# match 't' exactly twice
+grep(pattern = "t{2}", people, value = TRUE)
+
+## 5.3 Functions for Regular Expressions
+
+
+## 6.1 Pattern Finding Functions
+
+## 6.1.1 Function grep()
+# some text
+text = c("one word", "a sentence", "you and me", "three two one")
+
+# pattern
+pat = "one"
+
+# default usage
+grep(pat, text)
+
+# with 'value' (showing matched text)
+grep(pat, text, value = TRUE)
+
+#Another interesting argument to play with is invert.
+# with 'invert' (showing unmatched parts)
+grep(pat, text, invert = TRUE)
+
+# same with 'values'
+grep(pat, text, invert = TRUE, value = TRUE)
+
+## 6.1.2 Function grepl()
+# The difference resides in that the output are not 
+# numeric indices, but logical (TRUE / FALSE).
+
+# some text
+text = c("one word", "a sentence", "you and me", "three two one")
+
+# pattern
+pat = "one"
+
+# default usage
+grepl(pat, text)
+
+## 6.1.3 Function regexpr()
+# To find exactly where the pattern is 
+# found in a given string.
+
+# some text
+text = c("one word", "a sentence", "you and me", "three two one")
+
+# default usage
+regexpr("one", text)
+
+# [1]  1 -1 -1 11
+# The first element is an integer vector of the same length
+# as text giving the starting positions of the first match.
+
+# attr(,"match.length")
+# [1]  3 -1 -1  3
+# The attribute "match.length" gives us the length of the 
+# match in each element of text.
+
+# attr(,"useBytes")
+# [1] TRUE
+# Finally, the attribute "useBytes" has a value of TRUE which
+# means that the matching was done byte-by-byte rather than
+# character-by-character.
+
+## 6.1.4 Function gregexpr()
+
+# some text
+text = c("one word", "a sentence", "you and me", "three two one")
+
+# pattern
+pat = "one"
+
+# default usage
+gregexpr(pat, text)
+
+# gregexpr() returns a list of the same length as text,
+
+## 6.1.5 Function regexec()
+
+# some text
+text = c("one word", "a sentence", "you and me", "three two one")
+# pattern
+pat = "one"
+
+# default usage
+regexec(pat, text)
+
+# handy function to extract matched term
+x = regexpr(pat, text)
+substring(text, x, x + attr(x, "match.length") - 1)
+attr(x, "match.length")
+substring(text, x, 15)
+
+## 6.2 Pattern Replacement Functions
+
+## 6.2.1 Replacing first occurrence with sub()
+
+# string
+Rstring = c("The R Foundation",
+            "for Statistical Computing",
+            "R is FREE software",
+            "R is a collaborative project")
+# substitute 'R' with 'RR'
+sub("R", "RR", Rstring)
+
+# Note that the word FREE in the third element also contains an R 
+# but it was not replaced.
+
+## 6.2.2 Replacing all occurrences with gsub()
+
+# string
+Rstring = c("The R Foundation",
+            "for Statistical Computing",
+            "R is FREE software",
+            "R is a collaborative project")
+
+# substitute
+gsub("R", "RR", Rstring)
+
+## 6.3 Splitting Character Vectors
+# a sentence
+sentence = c("R is a collaborative project with many contributors")
+# split into words
+strsplit(sentence, " ")
+
+# telephone numbers
+tels = c("510-548-2238", "707-231-2440", "650-752-1300")
+# split each number into its portions
+strsplit(tels, "-")
+
+## 6.4 Functions in stringr
+library(stringr)
+## 6.4.1 Detecting patterns with str detect()
+# some objects
+some_objs = c("pen", "pencil", "marker", "spray")
+
+# detect phones
+str_detect(some_objs, "pen")
+# select detected macthes
+some_objs[str_detect(some_objs, "pen")]
+
+# some strings
+strings = c("12 Jun 2002", " 8 September 2004 ", "22-July-2009 ",
+            "01 01 2001", "date", "02.06.2000",
+            "xxx-yyy-zzzz", "$2,600")
+
+# date pattern (month as text)
+dates = "([0-9]{1,2})[- .]([a-zA-Z]+)[- .]([0-9]{4})"
+
+# detect dates
+str_detect(strings, dates)
+
+## 6.4.2 Extract first match with str extract()
+# tweets about 'Paris'
+paris_tweets = c(
+  "#Paris is chock-full of cultural and culinary attractions",
+  "Some time in #Paris along Canal St.-Martin famous by #Amelie",
+  "While you're in #Paris, stop at cafe: http://goo.gl/yaCbW",
+  "Paris, the city of light")
+
+# hashtag pattern
+hash = "#[a-zA-Z]{1,}"
+
+# extract (first) hashtag
+str_extract(paris_tweets, hash)
+
+## 6.4.3 Extract all matches with str extract all()
+# extract (all) hashtags
+str_extract_all(paris_tweets, "#[a-zA-Z]{1,}")
+
+## 6.4.4 Extract first match group with str match()
+
+# This function not only extracts the matched pattern
+# but it also shows each of the matched groups in a 
+# regex character class pattern.
+
+# string vector
+strings = c("12 Jun 2002", " 8 September 2004 ", "22-July-2009 ",
+            "01 01 2001", "date", "02.06.2000",
+            "xxx-yyy-zzzz", "$2,600")
+
+# date pattern (month as text)
+dates = "([0-9]{1,2})[- .]([a-zA-Z]+)[- .]([0-9]{4})"
+
+# extract first matched group
+str_match(strings, dates)
+
+# Note that the output is not a vector but a character matrix.
+
+
+## 6.4.5 Extract all matched groups with str match all()
+# tweets about 'Paris'
+paris_tweets = c(
+  "#Paris is chock-full of cultural and culinary attractions",
+  "Some time in #Paris along Canal St.-Martin famous by #Amelie",
+  "While you're in #Paris, stop at cafe: http://goo.gl/yaCbW",
+  "Paris, the city of light")
+# match (all) hashtags in 'paris_tweets'
+str_match_all(paris_tweets, "#[a-zA-Z]{1,}")
+
+# Note al also that each element of the list is a matrix with 
+# as many rows as hashtag matches.
+
+## 6.4.6 Locate first match with str locate()
+# locate position of (first) hashtag
+str_locate(paris_tweets, "#[a-zA-Z]{1,}")
+
+## 6.4.7 Locate all matches with str locate all()
+# locate (all) hashtags in 'paris_tweets'
+str_locate_all(paris_tweets, "#[a-zA-Z]{1,}")
+
+## 6.4.8 Replace first match with str replace()
+# city names
+cities = c("San Francisco", "Barcelona", "Naples", "Paris")
+
+str_replace(cities, "[aeiou]", ";")
+
+# replace first matched consonant
+str_replace(cities, "[^aeiou]", ";")
+
+## 6.4.9 Replace all matches with str replace all()
+# city names
+cities = c("San Francisco", "Barcelona", "Naples", "Paris")
+# replace all matched vowel
+str_replace_all(cities, pattern = "[aeiou]", ";")
+
+# replace all matched consonants
+str_replace_all(cities, pattern = "[^aeiou]", ";")
+
+## 6.4.10 String splitting with str split()
+
+# a sentence
+sentence = c("R is a collaborative project with many contributors")
+# split into words
+str_split(sentence, " ")
+
+# telephone numbers
+tels = c("510-548-2238", "707-231-2440", "650-752-1300")
+# split each number into its portions
+str_split(tels, "-")
+
+# string
+flavors = c("chocolate", "vanilla", "cinnamon", "mint", "lemon")
+# split by vowels
+str_split(flavors, "[aeiou]")
+
+# split by first vowel
+str_split(flavors, "[aeiou]", n = 2)
+# Now let's modify the maximum number of pieces to n = 2. 
+# This means that str split() will split each element into 
+# a maximum of 2 pieces.
+
+## 6.4.11 String splitting with str split fixed()
+
+# string
+flavors = c("chocolate", "vanilla", "cinnamon", "mint", "lemon")
+# split flavors into 2 pieces
+str_split_fixed(flavors, "n", 2)
+
+# split favors into 3 pieces
+str_split_fixed(flavors, "n", 3)
+# If we change the value n = 3, we will obtain a matrix with three 
+# columns:
